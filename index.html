@@ -1,214 +1,195 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="tr">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Matcha Tea Lounge</title>
+<title>Matcha Tea Lounge - My Little Cafe</title>
 <style>
-* {box-sizing:border-box}
-body {
-  margin:0;
-  font-family:Arial,sans-serif;
-  background:#f2f5df;
-  color:#435b39;
-  text-align:center;
-}
-header {
-  background:#789568;
-  color:white;
-  padding:22px 10px;
-}
-h1 {margin:5px;font-size:29px}
-main {max-width:480px;margin:auto;padding:18px}
-.panel {
-  background:#fffdf0;
-  border-radius:22px;
-  padding:20px;
-  margin:15px 0;
-  box-shadow:0 4px 12px #71845b25;
-}
-.drink {font-size:65px;margin:12px}
-button {
-  border:0;
-  border-radius:14px;
-  background:#91aa78;
-  color:white;
-  padding:13px 17px;
-  margin:5px;
-  font-size:15px;
-  cursor:pointer;
-}
-button:disabled {opacity:.45}
-button:hover {background:#647f51}
-.stats {
-  display:flex;
-  justify-content:space-around;
-  font-weight:bold;
-}
-#game {display:none}
-#result {display:none}
-#message {min-height:25px;font-weight:bold}
-.small {font-size:13px;color:#7b886e}
+*{box-sizing:border-box}
+body{margin:0;background:#edf3e5;color:#405b40;font-family:Arial,sans-serif;text-align:center}
+header{background:#b8d2a7;padding:24px 10px;border-radius:0 0 28px 28px}
+h1{margin:0;font-size:27px}
+header p{margin:8px 0 0}
+.container{max-width:480px;margin:auto;padding:14px}
+.stats{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin:15px 0}
+.stat{background:white;padding:12px;border-radius:15px;font-weight:bold;box-shadow:0 3px 8px #ccd8c4}
+.card{background:#fffdf5;padding:20px;border-radius:24px;margin:14px 0;box-shadow:0 4px 12px #ccd8c4}
+.customer{font-size:65px}
+.drink{font-size:65px;margin:8px}
+.order{font-size:20px;font-weight:bold;margin:10px}
+.ingredients{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:15px}
+.ingredient{background:#edf4e6;border:2px solid #d2e2c8;border-radius:15px;padding:14px 5px;font-size:16px;color:#405b40}
+.ingredient.selected{background:#b7d2a5;border-color:#638c58}
+button{border:0;border-radius:15px;padding:14px 20px;background:#719968;color:white;font-size:16px;font-weight:bold;margin:7px;cursor:pointer}
+button:disabled{opacity:.5}
+.secondary{background:#dce8d2;color:#405b40}
+.message{min-height:25px;font-weight:bold;margin:12px}
+.hidden{display:none}
+footer{padding:18px;font-size:12px}
 </style>
 </head>
 <body>
 
 <header>
-  <div style="font-size:35px">🍵🌿</div>
-  <h1>MATCHA TEA LOUNGE</h1>
-  <p>My Little Cafe</p>
+<h1>🍵 Matcha Tea Lounge</h1>
+<p>My Little Cafe 🌿</p>
 </header>
 
-<main>
-<section id="start" class="panel">
-  <div style="font-size:75px">🧋</div>
-  <h2>Welcome to our Cafe!</h2>
-  <p>Make delicious matcha drinks and serve your customers!</p>
-  <button onclick="startGame()">START GAME ▶</button>
-</section>
+<div class="container">
 
-<section id="game">
-  <div class="panel stats">
-    <span>⭐ Score: <b id="score">0</b></span>
-    <span>💰 Coins: <b id="coins">0</b></span>
-    <span>⏰ <b id="time">60</b>s</span>
-  </div>
+<div class="stats">
+<div class="stat">⭐ Puan: <span id="score">0</span></div>
+<div class="stat">🪙 Jeton: <span id="coins">0</span></div>
+<div class="stat">⏰ Süre: <span id="time">60</span></div>
+</div>
 
-  <div class="panel">
-    <h3>👩 Customer's Order</h3>
-    <div class="drink" id="customer">👩🏻</div>
-    <h2 id="order">Iced Matcha</h2>
-    <p class="small">Prepare the correct drink!</p>
-  </div>
+<div class="card" id="game">
+<h2>☁️ Hoş Geldin!</h2>
+<div class="customer" id="customer">👩🏻</div>
+<p id="customerText">Yeni müşterin seni bekliyor!</p>
+<div class="order" id="order">Sipariş: Matcha Latte</div>
+<div class="drink" id="preview">🍵</div>
+<p>İçeceği hazırlamak için malzemeleri seç:</p>
 
-  <div class="panel">
-    <h3>🥛 Choose Your Drink</h3>
-    <button onclick="choose('Iced Matcha')">🧊 Iced Matcha</button>
-    <button onclick="choose('Strawberry Matcha')">🍓 Strawberry Matcha</button>
-    <button onclick="choose('Hot Matcha')">☕ Hot Matcha</button>
-    <button onclick="choose('Vanilla Matcha')">🍦 Vanilla Matcha</button>
-    <p id="message">Choose a drink to serve!</p>
-  </div>
+<div class="ingredients">
+<button class="ingredient" data-item="matcha" onclick="toggleIngredient(this)">🍵 Matcha</button>
+<button class="ingredient" data-item="milk" onclick="toggleIngredient(this)">🥛 Süt</button>
+<button class="ingredient" data-item="ice" onclick="toggleIngredient(this)">🧊 Buz</button>
+<button class="ingredient" data-item="syrup" onclick="toggleIngredient(this)">🍯 Şurup</button>
+</div>
 
-  <div class="panel">
-    <h3>🌿 Ingredients</h3>
-    <div id="ingredients">
-      <button onclick="ingredient('Matcha')">🍵 Matcha</button>
-      <button onclick="ingredient('Milk')">🥛 Milk</button>
-      <button onclick="ingredient('Strawberry')">🍓 Strawberry</button>
-      <button onclick="ingredient('Ice')">🧊 Ice</button>
-      <button onclick="ingredient('Vanilla')">🍦 Vanilla</button>
-    </div>
-    <p id="selected">Selected: None</p>
-    <button onclick="prepare()">PREPARE DRINK ✨</button>
-  </div>
-</section>
+<p class="message" id="message">Malzemelerini seç!</p>
+<button onclick="prepare()">🥤 İçeceği Hazırla</button>
+<button class="secondary" onclick="serve()">💚 Siparişi Teslim Et</button>
+</div>
 
-<section id="result" class="panel">
-  <div style="font-size:70px">🏆</div>
-  <h2>Time is up!</h2>
-  <h3>Your Cafe Results</h3>
-  <p>⭐ Score: <b id="finalScore">0</b></p>
-  <p>💰 Coins: <b id="finalCoins">0</b></p>
-  <button onclick="startGame()">PLAY AGAIN ↻</button>
-</section>
-</main>
+<div class="card hidden" id="result">
+<h2>🎉 Kafe Kapandı!</h2>
+<div style="font-size:65px">🏡</div>
+<h3>Harika iş çıkardın!</h3>
+<p>Toplam puanın: <strong id="finalScore">0</strong></p>
+<p>Kazandığın jeton: <strong id="finalCoins">0</strong></p>
+<button onclick="restart()">🔄 Tekrar Oyna</button>
+</div>
+
+</div>
+
+<footer>Made with 💚 Matcha Tea Lounge</footer>
 
 <script>
-const recipes = {
-  "Iced Matcha":["Matcha","Milk","Ice"],
-  "Strawberry Matcha":["Matcha","Milk","Strawberry","Ice"],
-  "Hot Matcha":["Matcha","Milk"],
-  "Vanilla Matcha":["Matcha","Milk","Vanilla"]
-};
+const recipes = [
+ {name:"Matcha Latte",items:["matcha","milk"],emoji:"🍵"},
+ {name:"Iced Matcha",items:["matcha","milk","ice"],emoji:"🧋"},
+ {name:"Sweet Matcha",items:["matcha","milk","syrup"],emoji:"🍵"},
+ {name:"Iced Sweet Matcha",items:["matcha","milk","ice","syrup"],emoji:"🥤"}
+];
 
-let score=0, coins=0, time=60;
-let selected=[], currentOrder="", timer, active=false;
-
-function startGame(){
-  clearInterval(timer);
-  score=0; coins=0; time=60; active=true;
-  document.getElementById("start").style.display="none";
-  document.getElementById("result").style.display="none";
-  document.getElementById("game").style.display="block";
-  update();
-  newOrder();
-  timer=setInterval(()=>{
-    time--;
-    update();
-    if(time<=0) endGame();
-  },1000);
-}
-
-function update(){
-  document.getElementById("score").textContent=score;
-  document.getElementById("coins").textContent=coins;
-  document.getElementById("time").textContent=time;
-}
+const customers=["👩🏻","👨🏻","👩🏽","🧑🏻","👩🏼","👨🏽"];
+let score=0,coins=0,time=60;
+let selected=[];
+let currentOrder;
+let prepared=false;
+let running=false;
+let timer=null;
 
 function newOrder(){
-  const names=Object.keys(recipes);
-  currentOrder=names[Math.floor(Math.random()*names.length)];
-  document.getElementById("order").textContent=currentOrder;
-  document.getElementById("customer").textContent=
-    ["👩🏻","👨🏻","👧🏻","👩🏽"][Math.floor(Math.random()*4)];
-  selected=[];
-  showSelected();
+ currentOrder=recipes[Math.floor(Math.random()*recipes.length)];
+ document.getElementById("order").textContent="Sipariş: "+currentOrder.name;
+ document.getElementById("preview").textContent=currentOrder.emoji;
+ document.getElementById("customer").textContent=customers[Math.floor(Math.random()*customers.length)];
+ document.getElementById("customerText").textContent="Merhaba! Siparişimi hazırlayabilir misin?";
+ selected=[];
+ prepared=false;
+ document.querySelectorAll(".ingredient").forEach(b=>b.classList.remove("selected"));
+ document.getElementById("message").textContent="Malzemelerini seç!";
 }
 
-function ingredient(item){
-  if(!active)return;
-  if(selected.includes(item)){
-    selected=selected.filter(x=>x!==item);
-  }else{
-    selected.push(item);
-  }
-  showSelected();
+function startGame(){
+ if(running)return;
+ running=true;
+ newOrder();
+ timer=setInterval(()=>{
+  time--;
+  document.getElementById("time").textContent=time;
+  if(time<=0)endGame();
+ },1000);
 }
 
-function showSelected(){
-  document.getElementById("selected").textContent=
-    "Selected: "+(selected.join(", ")||"None");
+function toggleIngredient(button){
+ if(!running)startGame();
+ if(prepared)return;
+ const item=button.dataset.item;
+ if(selected.includes(item)){
+  selected=selected.filter(x=>x!==item);
+  button.classList.remove("selected");
+ }else{
+  selected.push(item);
+  button.classList.add("selected");
+ }
 }
 
 function prepare(){
-  if(!active)return;
-  const correct=recipes[currentOrder];
-  if(correct.length===selected.length &&
-     correct.every(x=>selected.includes(x))){
-    score+=10;
-    coins+=5;
-    document.getElementById("message").textContent=
-      "🎉 Perfect! Delicious matcha!";
-  }else{
-    score=Math.max(0,score-5);
-    document.getElementById("message").textContent=
-      "😅 Wrong recipe! Try again!";
-    update();
-    return;
-  }
-  update();
-  newOrder();
+ if(!running)startGame();
+ if(prepared){
+  document.getElementById("message").textContent="İçecek hazır, teslim edebilirsin!";
+  return;
+ }
+ if(selected.length===0){
+  document.getElementById("message").textContent="Önce malzeme seçmelisin!";
+  return;
+ }
+ prepared=true;
+ document.getElementById("message").textContent="✨ İçeceğin hazır! Şimdi teslim et.";
+ document.getElementById("preview").textContent="🥤";
 }
 
-function choose(name){
-  if(!active)return;
-  document.getElementById("message").textContent=
-    "Selected drink: "+name+". Choose its ingredients below!";
-  if(name!==currentOrder){
-    score=Math.max(0,score-2);
-    update();
-  }
+function serve(){
+ if(!running)startGame();
+ if(!prepared){
+  document.getElementById("message").textContent="Önce içeceği hazırlamalısın!";
+  return;
+ }
+ const correct=selected.length===currentOrder.items.length &&
+ currentOrder.items.every(item=>selected.includes(item));
+
+ if(correct){
+  score+=10;
+  coins+=5;
+  document.getElementById("message").textContent="🎉 Mükemmel! Müşteri çok mutlu!";
+ }else{
+  document.getElementById("message").textContent="🙈 Yanlış tarif! Yeni sipariş geliyor.";
+ }
+ updateStats();
+ setTimeout(()=>{
+  if(running)newOrder();
+ },900);
+}
+
+function updateStats(){
+ document.getElementById("score").textContent=score;
+ document.getElementById("coins").textContent=coins;
 }
 
 function endGame(){
-  active=false;
-  clearInterval(timer);
-  document.getElementById("game").style.display="none";
-  document.getElementById("result").style.display="block";
-  document.getElementById("finalScore").textContent=score;
-  document.getElementById("finalCoins").textContent=coins;
+ clearInterval(timer);
+ running=false;
+ document.getElementById("game").classList.add("hidden");
+ document.getElementById("result").classList.remove("hidden");
+ document.getElementById("finalScore").textContent=score;
+ document.getElementById("finalCoins").textContent=coins;
 }
+
+function restart(){
+ score=0;coins=0;time=60;selected=[];prepared=false;running=false;
+ clearInterval(timer);
+ document.getElementById("time").textContent=time;
+ updateStats();
+ document.getElementById("game").classList.remove("hidden");
+ document.getElementById("result").classList.add("hidden");
+ startGame();
+}
+
+newOrder();
 </script>
 </body>
 </html>
