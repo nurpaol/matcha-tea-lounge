@@ -1,16 +1,16 @@
 {
   "name": "matcha-tea-lounge",
   "version": "1.0.0",
-  "description": "Cute Matcha Tea Lounge mobile game",
-  "main": "index.html",
+  "private": true,
+  "description": "Cute Matcha Tea Lounge Mobile Game",
   "scripts": {
     "build": "mkdir -p www && cp index.html www/index.html"
   },
   "dependencies": {
-    "@capacitor/core": "^7.4.3"
+    "@capacitor/core": "7.4.3"
   },
   "devDependencies": {
-    "@capacitor/cli": "^7.4.3",
-    "@capacitor/android": "^7.4.3"
+    "@capacitor/cli": "7.4.3",
+    "@capacitor/android": "7.4.3"
   }
 }
